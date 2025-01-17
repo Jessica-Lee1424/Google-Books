@@ -1,12 +1,11 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    /* Modules */
-    "rootDir": "src" /* Specify the root folder within your source files. */,
-
-    /* Emit */
-    "outDir": "dist" /* Specify an output folder for all emitted files. */
-    // "noEmitOnError": true /* Disable emitting files if any type checking errors are reported. */
+    "target": "es2017",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true, // Optional: Enables all strict type-checking options
+    "esModuleInterop": true // Optional: Enables emit interoperability between CommonJS and ES Modules
   },
   "include": ["src"],
   "typeRoots": ["./node_modules/@types", "./src/types"]

@@ -1,6 +1,8 @@
-import { Schema } from 'mongoose';
-// This is a subdocument schema, it won't become its own model but we'll use it as the schema for the User's `savedBooks` array in User.js
-const bookSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+// Define the schema
+const bookSchema = new mongoose_1.Schema({
     authors: [
         {
             type: String,
@@ -26,4 +28,6 @@ const bookSchema = new Schema({
         required: true,
     },
 });
-export default bookSchema;
+// Create and export the model
+const Book = (0, mongoose_1.model)('Book', bookSchema);
+exports.default = Book;
