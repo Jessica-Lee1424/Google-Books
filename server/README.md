@@ -30,14 +30,13 @@ For testing feature viability
 To run in a terminal, run the following commands:
 npm install
 npm run build
-npm run seed
 npm run start
 
 ## Email
 jgonnellaTEST@gmail.com
 
 ## Render Website
-https://githubactions-wirx.onrender.com/
+https://google-books-k1gy.onrender.com
 
 ## License
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
