@@ -1,7 +1,6 @@
-import { Schema, model, type Document } from 'mongoose';
-
-export interface BookDocument extends Document {
-  bookId: string;
+// Define the type for the book object
+export interface Book {
+  id: string;
   title: string;
   authors: string[];
   description: string;
@@ -9,34 +8,24 @@ export interface BookDocument extends Document {
   link: string;
 }
 
-// Define the schema
-const bookSchema = new Schema<BookDocument>({
-  authors: [
-    {
-      type: String,
-    },
-  ],
-  description: {
-    type: String,
-    required: true,
+// Create the books array with the type applied
+const books: Book[] = [
+  {
+    id: "1",
+    title: "The Great Gatsby",
+    authors: ["F. Scott Fitzgerald"],
+    description: "A novel set in the Jazz Age.",
+    image: "image-link",
+    link: "book-link",
   },
-  // saved book id from GoogleBooks
-  bookId: {
-    type: String,
-    required: true,
+  {
+    id: "2",
+    title: "1984",
+    authors: ["George Orwell"],
+    description: "Dystopian novel.",
+    image: "image-link",
+    link: "book-link",
   },
-  image: {
-    type: String,
-  },
-  link: {
-    type: String,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-});
+];
 
-// Create and export the model
-const Book = model<BookDocument>('Book', bookSchema);
-export default Book;
+export default books;  // Use default export for TypeScript

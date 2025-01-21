@@ -1,18 +1,23 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+const express = require('express');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
+const { json } = require('body-parser');
+const cors = require('cors');
+const typeDefs = require('./schema/typeDefs');
+const resolvers = require('./schema/resolvers');
+const startServer = async () => {
+    const app = express();
+    const server = new ApolloServer({
+        typeDefs,
+        resolvers,
+    });
+    await server.start();
+    app.use(cors());
+    app.use(json());
+    app.use('/graphql', expressMiddleware(server));
+    app.listen(4000, () => {
+        console.log('🚀 Server ready at http://localhost:4000/graphql');
+    });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
-const node_path_1 = __importDefault(require("node:path"));
-const node_url_1 = require("node:url");
-const __filename = (0, node_url_1.fileURLToPath)(import.meta.url);
-const __dirname = node_path_1.default.dirname(__filename);
-const index_js_1 = __importDefault(require("./api/index.js"));
-router.use('/api', index_js_1.default);
-// Serve up React front-end in production
-router.use((_req, res) => {
-    res.sendFile(node_path_1.default.join(__dirname, '../../client/build/index.html'));
-});
-exports.default = router;
+startServer();

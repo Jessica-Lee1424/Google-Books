@@ -3,14 +3,14 @@ import bcrypt from 'bcrypt';
 
 // import schema from Book.js
 import bookSchema from './Book.js';
-import type { BookDocument } from './Book.js';
+import type { Book } from './Book.js';
 
 export interface UserDocument extends Document {
   id: string;
   username: string;
   email: string;
   password: string;
-  savedBooks: BookDocument[];
+  savedBooks: Book[];
   isCorrectPassword(password: string): Promise<boolean>;
   bookCount: number;
 }

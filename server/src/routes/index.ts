@@ -1,18 +1,29 @@
-import type { Request, Response } from 'express';
-import express from 'express';
-const router = express.Router();
+const express = require('express');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
+const { json } = require('body-parser');
+const cors = require('cors');
 
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-import apiRoutes from './api/index.js';
+const typeDefs = require('./schema/typeDefs');
+const resolvers = require('./schema/resolvers');
 
-router.use('/api', apiRoutes);
+const startServer = async () => {
+  const app = express();
 
-// Serve up React front-end in production
-router.use((_req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '../../client/build/index.html'));
-});
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-export default router;
+  await server.start();
+
+  app.use(cors());
+  app.use(json());
+  app.use('/graphql', expressMiddleware(server));
+
+  app.listen(4000, () => {
+    console.log('🚀 Server ready at http://localhost:4000/graphql');
+  });
+};
+
+startServer();

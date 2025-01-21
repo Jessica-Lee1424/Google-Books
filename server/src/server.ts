@@ -1,42 +1,21 @@
-import express from 'express';
-import path from 'node:path';
-import db from './config/connection.js';
-import routes from './routes/index.js';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { typeDefs } from './typeDefs';
-import { resolvers } from './resolvers';
-import cors from 'cors';
+import { ApolloServer } from 'apollo-server-express';
+import express, { Express } from 'express'; // Import Express type
+import typeDefs from './schema/typeDefs'; // Adjust the path as necessary
+import resolvers from './schema/resolvers'; // Adjust the path as necessary
+import books from './models/Book'; // Assuming you have a books model
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+// Set up the Apollo Server with Express
+const app: Express = express(); // Explicitly set the type of app
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Apply middleware to connect Apollo Server with Express
+server.applyMiddleware({ app });
 
-// Set up Apollo Server
-const server = new ApolloServer({ typeDefs, resolvers });
-await server.start();
-
-// Middleware for Apollo Server
-app.use(
-  '/graphql',
-  cors<cors.CorsRequest>(), // Enable CORS
-  expressMiddleware(server, {
-    context: async ({ req }) => {
-      // Include context setup here (e.g., auth token)
-      return { token: req.headers.authorization };
-    },
-  })
-);
-
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-}
-
-app.use(routes);
-
-db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on http://localhost:${PORT}/graphql`));
+// Start the server
+const port = 4000;
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}${server.graphqlPath}`);
 });
