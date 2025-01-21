@@ -10,12 +10,12 @@ interface Args {
 const resolvers = {
   Query: {
     books: (): Book[] => books, // Return type of books is an array of Book objects
-    book: (parent: unknown, args: { id: string }): Book | undefined => {
+    book: (_parent: unknown, args: { id: string }): Book | undefined => {
       return books.find(book => book.id === args.id); // Return type is Book or undefined
     },
   },
   Mutation: {
-    addBook: (parent: unknown, args: Args): Book => {
+    addBook: (_parent: unknown, args: Args): Book => {
       const newBook: Book = {
         id: `${Date.now()}`, // Use a timestamp for a unique ID
         authors: [],
@@ -27,7 +27,7 @@ const resolvers = {
       books.push(newBook);
       return newBook;
     },
-    deleteBook: (parent: unknown, args: { id: string }): Book => {
+    deleteBook: (_parent: unknown, args: { id: string }): Book => {
       const index = books.findIndex(book => book.id === args.id);
       if (index === -1) throw new Error("Book not found");
       const [deletedBook] = books.splice(index, 1);
