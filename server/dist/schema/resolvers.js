@@ -1,31 +1,31 @@
-import books from '../models/Book'; // Correctly import books as default export
+import User from '../models/User.js';
 const resolvers = {
     Query: {
-        books: () => books, // Return type of books is an array of Book objects
-        book: (parent, args) => {
-            return books.find(book => book.id === args.id); // Return type is Book or undefined
-        },
+        me: async (_parent, _args, context) => {
+            if (context.user) {
+                const userData = await User.findOne({ _id: context.user_id });
+                return userData;
+            }
+            return 'meFailed';
+        }
     },
     Mutation: {
-        addBook: (parent, args) => {
-            const newBook = {
-                id: `${Date.now()}`, // Use a timestamp for a unique ID
-                authors: [],
-                description: '',
-                image: '',
-                link: '',
-                ...args, // Destructure args to get title, author, etc., but no id
-            };
-            books.push(newBook);
-            return newBook;
+        addBook: async (_parent, args, context) => {
+            if (context.user) {
+                const updatedUser = await User.findOneAndUpdate({ _id: context.user._id }, { $addToSet: { savedBooks: args } }, { new: true, runValidators: true });
+                return updatedUser;
+            }
+            ;
+            return 'savedBookFailed';
         },
-        deleteBook: (parent, args) => {
-            const index = books.findIndex(book => book.id === args.id);
-            if (index === -1)
-                throw new Error("Book not found");
-            const [deletedBook] = books.splice(index, 1);
-            return deletedBook; // Return type is Book
-        },
-    },
+        deleteBook: async (_parent, args, context) => {
+            if (context.user) {
+                const updatedUser = await User.findOneAndUpdate({ _id: context.user._id }, { $pull: { savedBooks: { bookId: args.bookId } } }, { new: true });
+                return updatedUser;
+            }
+            ;
+            return 'deleteBookFailed';
+        }
+    }
 };
 export default resolvers;

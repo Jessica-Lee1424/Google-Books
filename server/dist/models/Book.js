@@ -1,20 +1,29 @@
-// Create the books array with the type applied
-const books = [
-    {
-        id: "1",
-        title: "The Great Gatsby",
-        authors: ["F. Scott Fitzgerald"],
-        description: "A novel set in the Jazz Age.",
-        image: "image-link",
-        link: "book-link",
+import { Schema } from 'mongoose';
+// This is a subdocument schema, it won't become its own model but we'll use it as the schema for the User's `savedBooks` array in User.js
+const bookSchema = new Schema({
+    authors: [
+        {
+            type: String,
+        },
+    ],
+    description: {
+        type: String,
+        required: true,
     },
-    {
-        id: "2",
-        title: "1984",
-        authors: ["George Orwell"],
-        description: "Dystopian novel.",
-        image: "image-link",
-        link: "book-link",
+    // saved book id from GoogleBooks
+    bookId: {
+        type: String,
+        required: true,
     },
-];
-export default books; // Use default export for TypeScript
+    image: {
+        type: String,
+    },
+    link: {
+        type: String,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+});
+export default bookSchema;
